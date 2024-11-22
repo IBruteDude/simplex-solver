@@ -1,12 +1,15 @@
 #include <iostream>
-#include <array>
+#include <vector>
 
 using namespace std;
 
 #define RESET   "\033[0m"
 #define GREEN  "\x1B[32m"
 
-void print_simplex_tableau(int n, int m, double (&a)[3][5], double *b, double *c, int *xb, double *z, double *c_z, double *theta, double fmax, int in = -1, int out = -1)
+template <typename T>
+using matrix = vector<vector<T>>;
+
+void print_simplex_tableau(int n, int m, matrix<double> &a, vector<double> &b, vector<double> &c, vector<int> &xb, vector<double> &z, vector<double> &c_z, vector<double> &theta, double fmax, int in = -1, int out = -1)
 {
 	bool is_result = (in == -1 && out == -1);
 	////////////////////////////////////////
@@ -18,7 +21,7 @@ void print_simplex_tableau(int n, int m, double (&a)[3][5], double *b, double *c
 	cout << "i\tc_b\tx_b\t";
 	for (int j = 0; j < n; j++)
 		cout << "x_" << j + 1 << '\t';
-	cout << "b_i\ttheta_i\n";
+	cout << "b_i\t" << ((!is_result) ? "theta_i\n" : "\n");
 	////////////////////////////////////////
 	for (int i = 0; i < m; i++)
 	{
@@ -55,20 +58,25 @@ int main()
 	/// Initialize all the inputs
 	int n = 5, m = 3;
 
-	double a[3][5] = {
+	matrix<double> a({
 		{5, 2, 1, 0, 0},
 		{2, 3, 0, 1, 0},
-		{4, 2, 0, 0, 1}},
-	b[m] = {150,
-			100,
-			80},
-	c[n] = {12, 8, 0, 0, 0};
-	int xb[m] = {2,
-				 3,
-				 4};
+		{4, 2, 0, 0, 1}
+	});
+	vector<double> b({
+		150,
+		100,
+		80
+	});
+	vector<double> c({12, 8, 0, 0, 0});
+	vector<int> xb({
+		2,
+		3,
+		4
+	});
 
 	/// Declare all the outputs
-	double z[n + 1], c_z[n], theta[m];
+	vector<double> z(n), c_z(n), theta(m);
 	double fmax;
 
 	/// Check if any b is negative
